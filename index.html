@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formentera — July 17</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sand: #f5ede0;
+      --sand-dark: #e8d9c5;
+      --ocean: #1a6e7e;
+      --ocean-deep: #0d3d47;
+      --ocean-light: #4fa3b4;
+      --coral: #e06840;
+      --gold: #c9963a;
+      --white: #fdfaf6;
+      --text: #1a1208;
+      --text-muted: #6b5940;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--sand);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3rem 2.5rem 4rem;
+      overflow: hidden;
+      background: var(--ocean-deep);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 120% 80% at 60% 30%, #1e8fa3 0%, transparent 55%),
+        radial-gradient(ellipse 80% 60% at 20% 70%, #0a4f5e 0%, transparent 60%),
+        radial-gradient(ellipse 100% 50% at 80% 90%, #0d2f38 0%, transparent 50%),
+        linear-gradient(170deg, #0d3d47 0%, #071e26 100%);
+      z-index: 0;
+    }
+
+    /* wave layers */
+    .waves {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .wave {
+      position: absolute;
+      bottom: 0;
+      width: 200%;
+      border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+      opacity: 0.18;
+      animation: sway linear infinite;
+      transform-origin: center bottom;
+    }
+    .wave-1 { height: 120px; background: var(--ocean-light); animation-duration: 9s; left: -20%; }
+    .wave-2 { height: 90px;  background: #7dd0df; animation-duration: 13s; animation-direction: reverse; left: -10%; bottom: 10px; }
+    .wave-3 { height: 60px;  background: var(--sand); opacity: 0.07; animation-duration: 7s; left: -30%; bottom: 20px; }
+
+    @keyframes sway {
+      0%   { transform: translateX(0) scaleY(1); }
+      50%  { transform: translateX(-10%) scaleY(1.04); }
+      100% { transform: translateX(0) scaleY(1); }
+    }
+
+    /* sun orb */
+    .sun {
+      position: absolute;
+      top: 12%;
+      right: 15%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fde68a 0%, #f59e0b 40%, #e06840 70%, transparent 100%);
+      box-shadow: 0 0 60px 20px rgba(240, 160, 60, 0.3), 0 0 120px 40px rgba(240, 120, 40, 0.15);
+      animation: pulse 4s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 60px 20px rgba(240,160,60,0.3), 0 0 120px 40px rgba(240,120,40,0.15); }
+      50%       { transform: scale(1.04); box-shadow: 0 0 80px 30px rgba(240,160,60,0.35), 0 0 150px 50px rgba(240,120,40,0.2); }
+    }
+
+    /* sailboat */
+    .boat {
+      position: absolute;
+      bottom: 38%;
+      left: 12%;
+      z-index: 2;
+      animation: drift 12s ease-in-out infinite;
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateX(0) rotate(-0.5deg); }
+      50%       { transform: translateX(18px) rotate(0.5deg); }
+    }
+    .boat svg { width: 70px; opacity: 0.55; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+
+    .hero-content { position: relative; z-index: 3; }
+
+    .hero-eyebrow {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ocean-light);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      line-height: 0.92;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.35s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: #a8dde8;
+    }
+
+    .hero-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.65s forwards;
+    }
+    .meta-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 2rem;
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+    }
+    .meta-pill .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--ocean-light);
+      flex-shrink: 0;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.8rem;
+      right: 2.5rem;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.2s forwards;
+    }
+    .scroll-hint span {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .scroll-arrow {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50%       { transform: scaleY(0.5); opacity: 0.4; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* ── LOGISTICS STRIP ── */
+    .logistics {
+      background: var(--ocean-deep);
+      color: var(--white);
+      padding: 2rem 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+    }
+    .logi-item { border-left: 2px solid rgba(255,255,255,0.12); padding-left: 1rem; }
+    .logi-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ocean-light);
+      margin-bottom: 0.3rem;
+    }
+    .logi-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    .logi-sub {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 0.15rem;
+    }
+
+    /* ── BODY SECTIONS ── */
+    .section {
+      padding: 4rem 2.5rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ocean);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--sand-dark);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 2.2rem;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--ocean-light), var(--coral), transparent);
+    }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 4.5rem 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .tl-item.visible { opacity: 1; transform: translateX(0); }
+
+    .tl-time {
+      text-align: right;
+      padding-top: 0.15rem;
+    }
+    .tl-time-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ocean);
+      line-height: 1;
+    }
+    .tl-time-ampm {
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: 1.85rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--ocean-light);
+      border: 2px solid var(--sand);
+      margin-top: 0.35rem;
+    }
+    .tl-dot.anchor { background: var(--coral); width: 13px; height: 13px; left: 1.72rem; }
+
+    .tl-body {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .tl-body::before {
+      content: '';
+      position: absolute;
+      left: -6px; top: 0.8rem;
+      width: 10px; height: 10px;
+      background: var(--white);
+      transform: rotate(45deg);
+      border-left: 1px solid rgba(0,0,0,0.04);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .tl-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .tl-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .tl-tag {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 2rem;
+      font-weight: 500;
+    }
+    .tag-ferry   { background: rgba(26,110,126,0.1); color: var(--ocean); }
+    .tag-beach   { background: rgba(201,150,58,0.12); color: var(--gold); }
+    .tag-food    { background: rgba(224,104,64,0.1); color: var(--coral); }
+    .tag-explore { background: rgba(79,163,180,0.12); color: #2a8a9c; }
+    .tag-return  { background: rgba(26,110,126,0.1); color: var(--ocean); }
+    .tag-urgent  { background: rgba(224,104,64,0.15); color: var(--coral); }
+
+    /* ── ACTION CARDS ── */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .action-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 1.3rem 1.4rem;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s, transform 0.5s, box-shadow 0.25s;
+    }
+    .action-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.09); transform: translateY(-2px) !important; }
+    .action-card.visible { opacity: 1; transform: translateY(0); }
+
+    .action-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      line-height: 1;
+      position: absolute;
+      top: -0.3rem;
+      right: 0.8rem;
+      color: rgba(0,0,0,0.04);
+      pointer-events: none;
+    }
+    .action-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .action-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .action-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+    .action-card.urgent::after {
+      content: 'BOOK NOW';
+      position: absolute;
+      top: 0.7rem; right: 0.7rem;
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      background: var(--coral);
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2rem;
+    }
+
+    /* ── TIPS ── */
+    .tips-list { display: flex; flex-direction: column; gap: 0.8rem; }
+    .tip {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      padding: 0.9rem 1rem;
+      background: var(--white);
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.04);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .tip.visible { opacity: 1; transform: translateX(0); }
+    .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .tip strong { color: var(--text); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ocean-deep);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+    }
+    footer strong { color: rgba(255,255,255,0.7); }
+
+    /* ── DIVIDER ── */
+    .wave-divider {
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      background: var(--ocean-deep);
+    }
+    .wave-divider svg { display: block; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 2rem 1.5rem 3rem; }
+      .section { padding: 3rem 1.5rem; }
+      .logistics { padding: 1.5rem; }
+      .timeline::before { left: 1.7rem; }
+      .tl-item { grid-template-columns: 3.5rem 1fr; }
+      .tl-dot { left: 1.35rem; }
+      .tl-dot.anchor { left: 1.22rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="waves">
+    <div class="wave wave-1"></div>
+    <div class="wave wave-2"></div>
+    <div class="wave wave-3"></div>
+  </div>
+  <div class="sun"></div>
+  <div class="boat">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M40 8 L40 44" stroke="white" stroke-width="1.5"/>
+      <path d="M40 10 L62 38 L40 38 Z" fill="white" opacity="0.7"/>
+      <path d="M40 18 L22 38 L40 38 Z" fill="white" opacity="0.45"/>
+      <path d="M16 44 Q40 52 64 44 L56 52 Q40 58 24 52 Z" fill="white" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Day Trip · Balearic Islands</p>
+    <h1 class="hero-title">Ibiza →<br><em>Formentera</em></h1>
+    <p class="hero-date">Friday, July 17, 2026</p>
+    <div class="hero-meta">
+      <div class="meta-pill"><span class="dot"></span>Depart from Ibiza Town</div>
+      <div class="meta-pill"><span class="dot"></span>30 min ferry crossing</div>
+      <div class="meta-pill"><span class="dot"></span>Full day on the island</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="48">
+    <path d="M0,48 C360,0 1080,48 1440,0 L1440,48 Z" fill="#f5ede0"/>
+  </svg>
+</div>
+
+<!-- LOGISTICS STRIP -->
+<div class="logistics">
+  <div class="logi-item">
+    <div class="logi-label">Departure Port</div>
+    <div class="logi-value">Ibiza Town</div>
+    <div class="logi-sub">Estación Marítima · 15 min from Roca Llisa</div>
+  </div>
+  <div class="logi-item">
+    <div class="logi-label">Ferry</div>
+    <div class="logi-value">Trasmapi or<br>Formentera Lines</div>
+    <div class="logi-sub">Catamaran · ~30 min · €29–44 RT</div>
+  </div>
+  <div class="logi-item">
+    <div class="logi-label">Transport on Island</div>
+    <div class="logi-value">Cars + Scooters</div>
+    <div class="logi-sub">Pre-book at La Savina · from €25/day</div>
+  </div>
+  <div class="logi-item">
+    <div class="logi-label">Budget / person</div>
+    <div class="logi-value">~€80–120</div>
+    <div class="logi-sub">Ferry + rental + lunch + beach</div>
+  </div>
+</div>
+
+<!-- ITINERARY -->
+<div class="section">
+  <div class="section-label">The Itinerary</div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">8:15</div>
+        <div class="tl-time-ampm">AM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">Leave Roca Llisa</div>
+          <div class="tl-desc">Head to Ibiza Town port — 15 min drive. Park at the port or grab a taxi for the group.</div>
+          <span class="tl-tag tag-ferry">Logistics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">9:00</div>
+        <div class="tl-time-ampm">AM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot anchor"></div>
+        <div class="tl-body">
+          <div class="tl-title">🚢 Ferry Departs</div>
+          <div class="tl-desc">Trasmapi or Formentera Lines fast catamaran from Estación Marítima. Scenic 30-min crossing — buy round-trip with a flexible afternoon return.</div>
+          <span class="tl-tag tag-ferry">Ferry</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">9:45</div>
+        <div class="tl-time-ampm">AM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">Arrive La Savina — Pick Up Vehicles</div>
+          <div class="tl-desc">Collect pre-booked cars and/or scooters. The port gets chaotic in July — pre-booking 24+ hours ahead is essential. Shops: ProAuto, Autos Ca Marí, Formentera Rent.</div>
+          <span class="tl-tag tag-explore">Transport</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">10:15</div>
+        <div class="tl-time-ampm">AM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot anchor"></div>
+        <div class="tl-body">
+          <div class="tl-title">🏖 Ses Illetes — Arrive Before the Gate Closes</div>
+          <div class="tl-desc">One of Europe's finest beaches: white sand, shallow turquoise water, views of Ibiza. Ses Salines Natural Park controls vehicle access daily — the gate fills by late morning in peak season. Arrive by 10:30 AM max. Small per-vehicle entry fee; bring cash.</div>
+          <span class="tl-tag tag-beach">★ Anchor Beach</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">10:30</div>
+        <div class="tl-time-ampm">AM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">Beach Time</div>
+          <div class="tl-desc">Swim, sunbeds, sandbar walk to Platja de Llevant. The water is shallow and dead calm on the Ibiza-facing side — perfect for a long morning float.</div>
+          <span class="tl-tag tag-beach">3 hrs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">1:30</div>
+        <div class="tl-time-ampm">PM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot anchor"></div>
+        <div class="tl-body">
+          <div class="tl-title">🍽 Lunch — Juan y Andrea</div>
+          <div class="tl-desc">The iconic beach restaurant right on Ses Illetes. Fresh seafood, paella, feet in the sand. Reservation required for a group in July — book this immediately. Backup option: Es Molí de Sal (equally booked) or Sa Sequi kiosk for a casual grilled fish lunch near the port.</div>
+          <span class="tl-tag tag-food">Reservation Required</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">3:30</div>
+        <div class="tl-time-ampm">PM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">Afternoon — Choose Your Adventure</div>
+          <div class="tl-desc">
+            <strong>Playa de Migjorn</strong> — longer, wilder south coast beach with chiringuitos (Vogamarí, Blue Bar).<br>
+            <strong>Cala Saona</strong> — dramatic west-facing cove, great late afternoon light and color.<br>
+            <strong>Far de la Mola</strong> — drive across the island to the eastern lighthouse, epic cliff views.<br>
+            <strong>Sant Francesc Xavier</strong> — the tiny capital for drinks and a stroll if you need shade.
+          </div>
+          <span class="tl-tag tag-explore">Pick One</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">6:30</div>
+        <div class="tl-time-ampm">PM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot"></div>
+        <div class="tl-body">
+          <div class="tl-title">🌅 Sunset Aperitivo near La Savina</div>
+          <div class="tl-desc">Big Sur or Kiosko 62 near the port — drinks, sunset views over the water back toward Ibiza. Return vehicles and make your way to the terminal.</div>
+          <span class="tl-tag tag-food">Golden Hour</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">
+        <div class="tl-time-main">7:30</div>
+        <div class="tl-time-ampm">PM</div>
+      </div>
+      <div style="position:relative">
+        <div class="tl-dot anchor"></div>
+        <div class="tl-body">
+          <div class="tl-title">🚢 Return Ferry to Ibiza</div>
+          <div class="tl-desc">Last ferries run until ~8:30 PM in July — don't push it past 8 PM. If energy levels are up, cap the night with dinner in Ibiza Town before heading back to Roca Llisa.</div>
+          <span class="tl-tag tag-return">Ferry Back</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ACTION ITEMS -->
+<div style="background: var(--sand-dark); padding: 0.5px 0;">
+  <div class="section">
+    <div class="section-label">Book This Week</div>
+    <div class="actions-grid">
+      <div class="action-card urgent">
+        <div class="action-num">1</div>
+        <div class="action-icon">🍽</div>
+        <div class="action-title">Juan y Andrea Reservation</div>
+        <div class="action-desc">Email or call now for a group table on July 17. July fills weeks in advance. This is the most time-sensitive item.</div>
+      </div>
+      <div class="action-card urgent">
+        <div class="action-num">2</div>
+        <div class="action-icon">⛴</div>
+        <div class="action-title">Ferry Tickets</div>
+        <div class="action-desc">Round-trip via Trasmapi or Formentera Lines. Use code <strong>2026VISITFORMENTERA</strong> for up to 20% off when booked 16–59 days ahead.</div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">3</div>
+        <div class="action-icon">🛵</div>
+        <div class="action-title">Cars + Scooters at La Savina</div>
+        <div class="action-desc">Pre-book 24+ hours ahead minimum (earlier is better in July). ProAuto, Autos Ca Marí, or Formentera Rent Scooter.</div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">4</div>
+        <div class="action-icon">💶</div>
+        <div class="action-title">Bring Cash</div>
+        <div class="action-desc">Ses Salines Natural Park vehicle fee and some chiringuitos prefer cash. ATM at La Savina port but the queue is long in summer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div class="section">
+  <div class="section-label">Tips &amp; Warnings</div>
+  <div class="tips-list">
+    <div class="tip">
+      <span class="tip-icon">⚠️</span>
+      <span><strong>Ses Illetes gate fills up fast.</strong> The Ses Salines Natural Park limits vehicle access daily in peak season. If you roll in past 11 AM on a Friday in July, there's a real chance you're turned away or stuck in a long queue. The 10:15 AM target is not optional.</span>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🛵</span>
+      <span><strong>Don't rent at the dock.</strong> The La Savina port on arrival is chaotic — everyone off the boat is competing for vehicles at the same handful of shops. Walk a block off the main drag or (better) book online the day before.</span>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🪪</span>
+      <span><strong>IDPs are in order.</strong> You've already confirmed International Driving Permits for Puglia — the same applies here if anyone is renting a car in Formentera.</span>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">☀️</span>
+      <span><strong>July 17 is a Friday.</strong> Day-before-weekend crowds are significant. This makes early arrival at Ses Illetes even more critical, and is exactly why you want lunch and transport locked in rather than winging it.</span>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">🌊</span>
+      <span><strong>Ses Illetes sandbar trick.</strong> The beach faces two directions — Ibiza-side is calm and shallow, open-sea-side can be choppy. Pick your side based on conditions that morning.</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Ibiza → Formentera · July 17, 2026</strong><br>
+  Day trip from Roca Llisa · Ibiza Town port · La Savina, Formentera
+</footer>
+
+<script>
+  // Intersection observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.tl-item, .action-card, .tip').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
